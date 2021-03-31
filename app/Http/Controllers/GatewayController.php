@@ -23,7 +23,6 @@ class GatewayController extends Controller
   public function index(Request $request)
   {
     $log = new Log;
-    $log->requestTime = Carbon::now()->timestamp . Carbon::now()->milli;
 
     $uriPaths = explode("/", $request->path());
     if ($uriPaths == false) {
@@ -67,10 +66,11 @@ class GatewayController extends Controller
 
     $log->method = $request->method();
 
+    $log->requestTime = Carbon::now()->timestamp . Carbon::now()->milli;
     $http = Http::send($request->method(), $url, $options);
+    $log->responseTime = Carbon::now()->timestamp . Carbon::now()->milli;
 
     $log->statusCode = $http->status();
-    $log->responseTime = Carbon::now()->timestamp . Carbon::now()->milli;
     $log->save();
 
     return response($http, $http->status(), $http->headers());
