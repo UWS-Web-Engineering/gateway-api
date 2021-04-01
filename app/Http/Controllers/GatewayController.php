@@ -47,8 +47,6 @@ class GatewayController extends Controller
       $route = sprintf("%s?%s", $route, $query);
     }
 
-    $log->url = $route;
-
     $serviceUrl = "http://";
     if ($service->secure) {
       $serviceUrl = "https://";
@@ -67,10 +65,12 @@ class GatewayController extends Controller
     if (!$path) {
       $path = new Path;
       $path->serviceId = $service->id;
-      $path->path = $route;
+      $path->path = "/" . $route;
       $path->method = $request->method();
       $path->save();
     }
+
+    $log->pathId = $path->id;
 
     $url = "{$serviceUrl}/{$route}";
 
@@ -88,8 +88,6 @@ class GatewayController extends Controller
         $options["multipart"] = $request->post();
       }
     }
-
-    $log->method = $request->method();
 
     $log->requestTime = Carbon::now()->timestamp . Carbon::now()->milli;
     $http = Http::send($request->method(), $url, $options);

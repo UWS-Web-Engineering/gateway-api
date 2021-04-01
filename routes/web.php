@@ -50,10 +50,18 @@ $router->group(['prefix' => 'api', 'middleware' => ['auth']], function () use ($
     $router->get('logout', 'AuthController@logout');
 
     $router->get('/services', 'ServiceController@index');
+    $router->get('/services/healths', 'ServiceController@healths');
     $router->post('/service', 'ServiceController@create');
     $router->get('/service/{id}', 'ServiceController@show');
+    $router->put('/service/{id}', 'ServiceController@update');
     $router->delete('/service/{id}', 'ServiceController@destroy');
+    $router->get('/service/{serviceId}/paths', 'PathController@pathsForService');
 
     $router->get('/logs', 'LogController@index');
     $router->get('/logs/{serviceId}', 'LogController@logsForService');
+
+    $router->get('/health/requests', 'HealthController@requestCount');
+    $router->get('/health/success', 'HealthController@successRate');
+    $router->get('/health/responseTime', 'HealthController@avgResponseTime');
+    $router->get('/health/chart', 'HealthController@getChartData');
 });
