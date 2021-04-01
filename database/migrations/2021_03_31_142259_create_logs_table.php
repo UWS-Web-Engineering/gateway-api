@@ -17,8 +17,8 @@ class CreateLogsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('serviceId');
             $table->foreign('serviceId')->references('id')->on('services');
-            $table->string('method')->notNullable();
-            $table->string('url')->notNullable();
+            $table->unsignedBigInteger('pathId');
+            $table->foreign('pathId')->references('id')->on('paths');
             $table->integer('statusCode')->notNullable();
             $table->bigInteger('requestTime')->notNullable();
             $table->bigInteger('responseTime')->notNullable();

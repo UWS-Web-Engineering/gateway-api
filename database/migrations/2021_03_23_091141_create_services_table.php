@@ -15,9 +15,14 @@ class CreateServicesTable extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable(false);
-            $table->string('url')->nullable(false);
-            $table->boolean('active')->default(true)->nullable(false);
+            $table->string('name')->notNullable();
+            $table->string('description');
+            $table->string('key')->unique()->notNullable();
+            $table->boolean('secure')->default(true)->notNullable();
+            $table->string('domain')->notNullable();
+            $table->string('port')->notNullable();
+            $table->string('path')->notNullable();
+            $table->boolean('active')->default(true)->notNullable();
             $table->timestamps();
         });
     }

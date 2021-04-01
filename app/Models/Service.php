@@ -12,7 +12,7 @@ class Service extends Model
    * @var array
    */
   protected $fillable = [
-    'name', 'url', 'active'
+    'name', 'description', 'key', 'secure', 'domain', 'port', 'path', 'active'
   ];
 
   /**

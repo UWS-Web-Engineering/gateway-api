@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Log extends Model
+class Path extends Model
 {
   /**
    * The attributes that are mass assignable.
@@ -12,7 +12,7 @@ class Log extends Model
    * @var array
    */
   protected $fillable = [
-    'serviceId', 'pathId', 'statusCode', 'requestTime', 'responseTime'
+    'serviceId', 'path', 'method', 'requireAuth'
   ];
 
   /**

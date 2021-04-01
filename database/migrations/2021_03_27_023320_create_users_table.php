@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('username')->unique()->notNullable();
             $table->string('password')->notNullable();
+            $table->enum('role', array('admin', 'member'))->default("member");
             $table->timestamps();
         });
     }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use App\Models\Path;
+use App\Models\Log;
 use Illuminate\Http\Request;
 
 
@@ -15,7 +17,6 @@ class ServiceController extends Controller
    */
   public function index()
   {
-
     $services = Service::all();
 
     return response()->json($services);
@@ -23,10 +24,25 @@ class ServiceController extends Controller
 
   public function create(Request $request)
   {
+    $this->validate($request, [
+      'name' => 'required',
+      'key' => 'required|unique:services',
+      'secure' => 'required',
+      'domain' => 'required',
+      'port' => 'required',
+      'active' => 'required',
+    ]);
+
     $service = new Service;
 
     $service->name = $request->input('name');
-    $service->url = $request->input('url');
+    $service->description = $request->input('description');
+    $service->key = $request->input('key');
+    $service->secure = $request->input('secure');
+    $service->domain = $request->input('domain');
+    $service->port = $request->input('port');
+    $service->path = $request->input('path');
+    $service->manualRoutes = false;
     $service->active = $request->input('active');
 
     $service->save();
@@ -38,15 +54,37 @@ class ServiceController extends Controller
   {
     $service = Service::find($id);
 
+    if (!$service) {
+      return response("Not found", 404);
+    }
+
     return response()->json($service);
   }
 
   public function update(Request $request, $id)
   {
+    $this->validate($request, [
+      'name' => 'required',
+      'key' => 'required|unique:services',
+      'secure' => 'required',
+      'domain' => 'required',
+      'port' => 'required',
+      'active' => 'required',
+    ]);
+
     $service = Service::find($id);
 
+    if (!$service) {
+      return response("Not found", 404);
+    }
+
     $service->name = $request->input('name');
-    $service->url = $request->input('url');
+    $service->description = $request->input('description');
+    $service->key = $request->input('key');
+    $service->secure = $request->input('secure');
+    $service->domain = $request->input('domain');
+    $service->port = $request->input('port');
+    $service->path = $request->input('path');
     $service->active = $request->input('active');
     $service->save();
     return response()->json($service);
@@ -55,6 +93,13 @@ class ServiceController extends Controller
   public function destroy($id)
   {
     $service = Service::find($id);
+    if (!$service) {
+      return response("Not found", 404);
+    }
+
+    Path::where('serviceId', $id)->delete();
+    Log::where('serviceId', $id)->delete();
+
     $service->delete();
 
     return response()->json('service removed successfully');

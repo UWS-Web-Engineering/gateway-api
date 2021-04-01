@@ -19,7 +19,7 @@ class PermissionMiddleware
   {
     $user = Auth::user();
 
-    if ($user->username === $role) {
+    if ($user->role !== $role) {
       return response('Forbidden', 403);
     }
     return $next($request);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use App\Models\Path;
 use App\Models\Log;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -30,11 +31,11 @@ class GatewayController extends Controller
     }
 
     array_shift($uriPaths);
-    $serviceName = array_shift($uriPaths);
+    $serviceKey = array_shift($uriPaths);
 
-    $service = Service::where('name', $serviceName)->first();
+    $service = Service::where('key', $serviceKey)->first();
 
-    if (!$service) {
+    if (!$service || !$service->active) {
       return response("Not Found", 404);
     }
 
@@ -47,7 +48,31 @@ class GatewayController extends Controller
     }
 
     $log->url = $route;
-    $url = "{$service->url}/{$route}";
+
+    $serviceUrl = "http://";
+    if ($service->secure) {
+      $serviceUrl = "https://";
+    }
+    $serviceUrl .= $service->domain;
+    $serviceUrl .= ":" . $service->port;
+    if ($service->path) {
+      $serviceUrl .= "/" . $service->path;
+    }
+
+    $path = Path::where('serviceId', $service->id)->where('path', $route)->where('method', $request->method())->first();
+    if ($service->manualRoutes) {
+      return response("Not found", 404);
+    }
+
+    if (!$path) {
+      $path = new Path;
+      $path->serviceId = $service->id;
+      $path->path = $route;
+      $path->method = $request->method();
+      $path->save();
+    }
+
+    $url = "{$serviceUrl}/{$route}";
 
     $options = ["headers" => $request->header()];
 
@@ -72,6 +97,11 @@ class GatewayController extends Controller
 
     $log->statusCode = $http->status();
     $log->save();
+
+    if (($http->status() === 401 || $http->status() === 403) && !$path->requireAuth) {
+      $path->requireAuth = true;
+      $path->save();
+    }
 
     return response($http, $http->status(), $http->headers());
   }

@@ -4,4 +4,4 @@ php artisan make:migration create_products_table
 run the migrations:
 php artisan migrate
 
-php -S localhost:8000 -t public            
+php -S localhost:8000 -t public
