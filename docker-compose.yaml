@@ -1,0 +1,27 @@
+version: "3.1"
+services:
+  db:
+    image: postgres
+    restart: always
+    networks:
+      - backend
+    environment:
+      POSTGRES_DB: ${DATABASE_DB}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASS}
+
+  api:
+    build: ./api
+    ports:
+      - 8000:8000
+    networks:
+      - backend
+    depends_on:
+      - db
+    environment:
+      DB_HOST: ${DATABASE_HOST}
+      DB_DATABASE: ${DATABASE_DB}
+      DB_USERNAME: ${DATABASE_USER}
+      DB_PASSWORD: ${DATABASE_PASS}
+networks:
+  backend:
