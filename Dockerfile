@@ -12,6 +12,9 @@ RUN apt-get update \
 COPY . /usr/src/gateway
 WORKDIR /usr/src/gateway
 
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer install
+
 CMD sleep 5 && php artisan migrate && php -S 0.0.0.0:8000 -t public
 
 EXPOSE 8000
