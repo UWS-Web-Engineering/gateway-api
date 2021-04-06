@@ -14,7 +14,10 @@ WORKDIR /usr/src/gateway
 
 RUN apt-get update && \
   apt-get upgrade -y && \
-  apt-get install -y git
+  apt-get install -y git && \
+  apt-get install -y zip && \
+  apt-get install -y unzip
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-interaction --prefer-dist
 
