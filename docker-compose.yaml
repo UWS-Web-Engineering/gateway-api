@@ -6,12 +6,12 @@ services:
     networks:
       - backend
     environment:
-      POSTGRES_DB: ${DATABASE_DB}
-      POSTGRES_USER: ${DATABASE_USER}
-      POSTGRES_PASSWORD: ${DATABASE_PASS}
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
 
   api:
-    build: ./api
+    image: iconic21/gateway-api
     ports:
       - 8000:8000
     networks:
@@ -19,9 +19,22 @@ services:
     depends_on:
       - db
     environment:
-      DB_HOST: ${DATABASE_HOST}
-      DB_DATABASE: ${DATABASE_DB}
-      DB_USERNAME: ${DATABASE_USER}
-      DB_PASSWORD: ${DATABASE_PASS}
+      APP_NAME: ${APP_NAME}
+      APP_ENV: ${APP_ENV}
+      APP_KEY: ${APP_KEY}
+      APP_DEBUG: ${APP_DEBUG}
+      APP_URL: ${APP_URL}
+      APP_TIMEZONE: ${APP_TIMEZONE}
+      LOG_CHANNEL: ${LOG_CHANNEL}
+      LOG_SLACK_WEBHOOK_URL: ${LOG_SLACK_WEBHOOK_URL}
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      CACHE_DRIVER: ${CACHE_DRIVER}
+      QUEUE_CONNECTION: ${QUEUE_CONNECTION}
+      JWT_SECRET: ${JWT_SECRET}
 networks:
   backend:
