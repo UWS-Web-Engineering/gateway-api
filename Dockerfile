@@ -18,6 +18,6 @@ RUN apt-get update && \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-interaction --prefer-dist
 
-CMD sleep 5 && php artisan migrate --force && php -S 0.0.0.0:8000 -t public
+CMD sleep 5 && php artisan migrate --force && php -S 0.0.0.0:8000 -t public output_buffering=4098
 
 EXPOSE 8000
