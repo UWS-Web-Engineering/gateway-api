@@ -12,7 +12,7 @@ class Log extends Model
    * @var array
    */
   protected $fillable = [
-    'serviceId', 'pathId', 'statusCode', 'requestTime', 'responseTime'
+    'serviceId', 'path', 'method', 'statusCode', 'requestTime', 'responseTime'
   ];
 
   /**

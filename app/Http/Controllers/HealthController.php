@@ -55,9 +55,7 @@ class HealthController extends Controller
 
     $sum7 = 0;
     foreach ($logs7DaysAgo as &$value) {
-      if ($value->statusCode < 200 || $value->statusCode > 299) {
-        $sum7 +=  $value->responseTime - $value->requestTime;
-      }
+      $sum7 +=  $value->responseTime - $value->requestTime;
     }
 
     $sum14 = 0;

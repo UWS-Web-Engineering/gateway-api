@@ -57,24 +57,12 @@ class GatewayController extends Controller
       $serviceUrl .= "/" . $service->path;
     }
 
-    $path = Path::where('serviceId', $service->id)->where('path', $route)->where('method', $request->method())->first();
-    if ($service->manualRoutes) {
-      return response("Not found", 404);
-    }
-
-    if (!$path) {
-      $path = new Path;
-      $path->serviceId = $service->id;
-      $path->path = "/" . $route;
-      $path->method = $request->method();
-      $path->save();
-    }
-
-    $log->pathId = $path->id;
+    $log->path = "/" . $route;
+    $log->method = $request->method();
 
     $url = "{$serviceUrl}/{$route}";
 
-    $options = ["headers" => $request->header()];
+    $options = []; //["headers" => $request->header()];
 
     if ($request->post()) {
       $contentType = $request->header("Content-Type", "application/json");
@@ -89,17 +77,12 @@ class GatewayController extends Controller
       }
     }
 
-    $log->requestTime = Carbon::now()->timestamp . Carbon::now()->milli;
+    $log->requestTime = Carbon::now()->timestamp . Carbon::now()->milliseconds;
     $http = Http::send($request->method(), $url, $options);
-    $log->responseTime = Carbon::now()->timestamp . Carbon::now()->milli;
+    $log->responseTime = Carbon::now()->timestamp . Carbon::now()->milliseconds;
 
     $log->statusCode = $http->status();
     $log->save();
-
-    if (($http->status() === 401 || $http->status() === 403) && !$path->requireAuth) {
-      $path->requireAuth = true;
-      $path->save();
-    }
 
     return response($http, $http->status(), $http->headers());
   }
