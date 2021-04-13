@@ -60,8 +60,8 @@ $router->group(['prefix' => 'api', 'middleware' => ['auth']], function () use ($
     $router->get('/logs', 'LogController@index');
     $router->get('/logs/{serviceId}', 'LogController@logsForService');
 
-    $router->get('/health/requests', 'HealthController@requestCount');
-    $router->get('/health/success', 'HealthController@successRate');
-    $router->get('/health/responseTime', 'HealthController@avgResponseTime');
-    $router->get('/health/chart', 'HealthController@getChartData');
+    $router->get('/health/requests[/{id}]', 'HealthController@requestCount');
+    $router->get('/health/success[/{id}]', 'HealthController@successRate');
+    $router->get('/health/responseTime[/{id}]', 'HealthController@avgResponseTime');
+    $router->get('/health/chart[/{id}]', 'HealthController@getChartData');
 });

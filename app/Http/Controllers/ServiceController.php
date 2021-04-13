@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
-use App\Models\Path;
 use App\Models\Log;
 use Illuminate\Http\Request;
 
@@ -27,9 +26,7 @@ class ServiceController extends Controller
     $this->validate($request, [
       'name' => 'required',
       'key' => 'required|unique:services',
-      'secure' => 'required',
-      'domain' => 'required',
-      'port' => 'required',
+      'url' => 'required',
       'active' => 'required',
     ]);
 
@@ -38,10 +35,7 @@ class ServiceController extends Controller
     $service->name = $request->input('name');
     $service->description = $request->input('description');
     $service->key = $request->input('key');
-    $service->secure = $request->input('secure');
-    $service->domain = $request->input('domain');
-    $service->port = $request->input('port');
-    $service->path = $request->input('path');
+    $service->url = $request->input('url');
     $service->active = $request->input('active');
 
     $service->save();
@@ -70,18 +64,15 @@ class ServiceController extends Controller
 
     $this->validate($request, [
       'name' => 'required',
-      'secure' => 'required',
-      'domain' => 'required',
-      'port' => 'required',
+      'key' => 'required|unique:services',
+      'url' => 'required',
       'active' => 'required',
     ]);
 
     $service->name = $request->input('name');
+    $service->key = $request->input('key');
     $service->description = $request->input('description');
-    $service->secure = $request->input('secure');
-    $service->domain = $request->input('domain');
-    $service->port = $request->input('port');
-    $service->path = $request->input('path');
+    $service->url = $request->input('url');
     $service->active = $request->input('active');
     $service->save();
     return response()->json($service);
@@ -94,7 +85,6 @@ class ServiceController extends Controller
       return response("Not found", 404);
     }
 
-    Path::where('serviceId', $id)->delete();
     Log::where('serviceId', $id)->delete();
 
     $service->delete();
@@ -118,7 +108,7 @@ class ServiceController extends Controller
       }
     }
 
-    return $errors / sizeof($logs) * 100;
+    return 100 - ($errors / sizeof($logs) * 100);
   }
 
   public function healths()

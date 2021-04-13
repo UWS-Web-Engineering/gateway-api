@@ -18,10 +18,7 @@ class CreateServicesTable extends Migration
             $table->string('name')->notNullable();
             $table->string('description');
             $table->string('key')->unique()->notNullable();
-            $table->boolean('secure')->default(true)->notNullable();
-            $table->string('domain')->notNullable();
-            $table->string('port')->notNullable();
-            $table->string('path')->notNullable();
+            $table->boolean('url')->notNullable();
             $table->boolean('active')->default(true)->notNullable();
             $table->timestamps();
         });

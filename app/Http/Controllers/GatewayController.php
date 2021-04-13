@@ -47,20 +47,10 @@ class GatewayController extends Controller
       $route = sprintf("%s?%s", $route, $query);
     }
 
-    $serviceUrl = "http://";
-    if ($service->secure) {
-      $serviceUrl = "https://";
-    }
-    $serviceUrl .= $service->domain;
-    $serviceUrl .= ":" . $service->port;
-    if ($service->path) {
-      $serviceUrl .= "/" . $service->path;
-    }
-
     $log->path = "/" . $route;
     $log->method = $request->method();
 
-    $url = "{$serviceUrl}/{$route}";
+    $url = "{$service->url}/{$route}";
 
     $options = []; //["headers" => $request->header()];
 
