@@ -30,7 +30,6 @@ class GatewayController extends Controller
       return "error";
     }
 
-    array_shift($uriPaths);
     $serviceKey = array_shift($uriPaths);
 
     $service = Service::where('key', $serviceKey)->first();

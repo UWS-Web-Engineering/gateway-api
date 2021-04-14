@@ -13,32 +13,15 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
-
-// gateway routes
-$router->group(['prefix' => 'gateway'], function () use ($router) {
-    $router->get('{route:.*}/', "GatewayController@index");
-    $router->post('{route:.*}/', "GatewayController@index");
-    $router->put('{route:.*}/', "GatewayController@index");
-    $router->patch('{route:.*}/', "GatewayController@index");
-    $router->delete('{route:.*}/', "GatewayController@index");
-    $router->options('{route:.*}/', "GatewayController@index");
-});
-
 // Public routes
-$router->group(['prefix' => 'api'], function () use ($router) {
-    $router->post('login', 'AuthController@login');
-
-    $router->group(['prefix' => 'setup'], function () use ($router) {
-        $router->get('status', 'SetupController@status');
-        $router->post('admin', 'SetupController@createAdmin');
-    });
+$router->post('login', 'AuthController@login');
+$router->group(['prefix' => 'setup'], function () use ($router) {
+    $router->get('status', 'SetupController@status');
+    $router->post('admin', 'SetupController@createAdmin');
 });
 
 // Private routes
-$router->group(['prefix' => 'api', 'middleware' => ['auth']], function () use ($router) {
+$router->group(['middleware' => ['auth']], function () use ($router) {
     $router->group(['middleware' => ['role:admin']], function () use ($router) {
         $router->post('register', 'AuthController@register');
         $router->get('user/{id}', 'UserController@singleUser');
@@ -65,3 +48,10 @@ $router->group(['prefix' => 'api', 'middleware' => ['auth']], function () use ($
     $router->get('/health/responseTime[/{id}]', 'HealthController@avgResponseTime');
     $router->get('/health/chart[/{id}]', 'HealthController@getChartData');
 });
+
+$router->get('/{any:.*}', "GatewayController@index");
+$router->post('/{any:.*}', "GatewayController@index");
+$router->put('/{any:.*}', "GatewayController@index");
+$router->patch('/{any:.*}', "GatewayController@index");
+$router->delete('/{any:.*}', "GatewayController@index");
+$router->options('/{any:.*}', "GatewayController@index");
