@@ -101,6 +101,10 @@ class ServiceController extends Controller
 
     $logs = Log::orderBy('created_at', 'DESC')->where('serviceId', $id)->select('statusCode')->take(100)->get();
 
+    if (sizeof($logs) === 0) {
+      return 100;
+    }
+
     $errors = 0;
     foreach ($logs as &$value) {
       if ($value->statusCode < 200 || $value->statusCode > 299) {
