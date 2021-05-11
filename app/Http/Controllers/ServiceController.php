@@ -64,7 +64,6 @@ class ServiceController extends Controller
 
     $this->validate($request, [
       'name' => 'required',
-      'key' => 'required|unique:services',
       'url' => 'required',
       'active' => 'required',
     ]);

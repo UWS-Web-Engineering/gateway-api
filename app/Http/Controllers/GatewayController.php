@@ -51,10 +51,14 @@ class GatewayController extends Controller
 
     $url = "{$service->url}/{$route}";
 
-    $options = []; //["headers" => $request->header()];
+    $options = [
+      "user-agent" => $request->header("user-agent"),
+      "Content-Type" => $request->header("content-type"),
+      "cookies" => $request->header("cookies", ""),
+    ];
 
     if ($request->post()) {
-      $contentType = $request->header("Content-Type", "application/json");
+      $contentType = $request->header("content-type", "application/json");
       if ($contentType === "application/json") {
         $options["json"] = $request->post();
       }
@@ -66,13 +70,19 @@ class GatewayController extends Controller
       }
     }
 
-    $log->requestTime = Carbon::now()->timestamp . Carbon::now()->milliseconds;
-    $http = Http::send($request->method(), $url, $options);
-    $log->responseTime = Carbon::now()->timestamp . Carbon::now()->milliseconds;
+    $log->requestTime = Carbon::now()->getPreciseTimestamp(3);
+    $http = Http::send($request->method(), rtrim($url, '/'), $options);
+    $log->responseTime = Carbon::now()->getPreciseTimestamp(3);
 
     $log->statusCode = $http->status();
     $log->save();
 
-    return response($http, $http->status(), $http->headers());
+    $responseHeaders = ["content-type" => $http->header("content-type")];
+
+    if ($http->header("set-cookie")) {
+      $responseHeaders["set-cookie"] = $http->header("set-cookie");
+    }
+
+    return response($http, $http->status(), $responseHeaders);
   }
 }

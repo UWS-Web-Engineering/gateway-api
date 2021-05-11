@@ -19,7 +19,7 @@ class CreateServicesTable extends Migration
             $table->string('description');
             $table->string('key')->unique()->notNullable();
             $table->string('url')->notNullable();
-            $table->boolean('active')->default(true)->notNullable();
+            $table->integer('active')->default(1)->notNullable();
             $table->timestamps();
         });
     }
