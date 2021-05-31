@@ -52,7 +52,7 @@ class GatewayController extends Controller
     $url = "{$service->url}{$route}";
 
     $options = [
-      "Accept" => $request->header("authorization", "application/json"),
+      "Accept" => $request->header("accept", "application/json"),
       "user-agent" => $request->header("user-agent"),
       "Content-Type" => $request->header("content-type"),
       "cookies" => $request->header("cookies", ""),
