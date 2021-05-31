@@ -58,7 +58,6 @@ class GatewayController extends Controller
       "Authorization" => $request->header("authorization", ""),
     ];
 
-    return $options;
     if ($request->post()) {
       $contentType = $request->header("content-type", "application/json");
       if ($contentType === "application/json") {
