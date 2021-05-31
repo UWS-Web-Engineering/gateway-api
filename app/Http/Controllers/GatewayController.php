@@ -39,7 +39,7 @@ class GatewayController extends Controller
     }
 
     if ($service->private) {
-      $authUrl = env('AUTH_URL');
+      $authUrl = rtrim(env('AUTH_URL'), '/');
       $http = Http::withHeaders([
         "Accept" => "application/json",
         "Content-Type" => "application/json",
@@ -61,7 +61,8 @@ class GatewayController extends Controller
     $log->path = "/" . $route;
     $log->method = $request->method();
 
-    $url = "{$service->url}{$route}";
+    $serviceUrl = rtrim($service->url, '/');
+    $url = "{$serviceUrl}/{$route}";
 
     $options = [];
 
