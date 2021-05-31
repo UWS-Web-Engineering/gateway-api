@@ -45,7 +45,7 @@ class GatewayController extends Controller
         "Content-Type" => "application/json",
         "Authorization" => $request->header("authorization", ""),
       ])->send("GET", $authUrl . "/api/user/me", []);
-      if (!$http->status()) {
+      if ($http->status() !== 200) {
         return response("Unauthorized", 401);
       }
     }
