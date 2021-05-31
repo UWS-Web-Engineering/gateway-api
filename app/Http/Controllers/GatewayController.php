@@ -51,11 +51,7 @@ class GatewayController extends Controller
 
     $url = "{$service->url}{$route}";
 
-    $options = [
-      "Accept" => $request->header("accept", "application/json"),
-      "Content-Type" => $request->header("content-type", "application/json"),
-      "Authorization" => $request->header("authorization", ""),
-    ];
+    $options = [];
 
     if ($request->post()) {
       $contentType = $request->header("content-type", "application/json");
@@ -71,7 +67,11 @@ class GatewayController extends Controller
     }
 
     $log->requestTime = Carbon::now()->getPreciseTimestamp(3);
-    $http = Http::send($request->method(), rtrim($url, '/'), $options);
+    $http = Http::withHeaders([
+      "Accept" => $request->header("accept", "application/json"),
+      "Content-Type" => $request->header("content-type", "application/json"),
+      "Authorization" => $request->header("authorization", ""),
+    ])->send($request->method(), rtrim($url, '/'), $options);
     $log->responseTime = Carbon::now()->getPreciseTimestamp(3);
 
     $log->statusCode = $http->status();
