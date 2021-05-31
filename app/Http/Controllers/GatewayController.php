@@ -53,9 +53,7 @@ class GatewayController extends Controller
 
     $options = [
       "Accept" => $request->header("accept", "application/json"),
-      "user-agent" => $request->header("user-agent"),
-      "Content-Type" => $request->header("content-type"),
-      "cookies" => $request->header("cookies", ""),
+      "Content-Type" => $request->header("content-type", "application/json"),
       "Authorization" => $request->header("authorization", ""),
     ];
 
