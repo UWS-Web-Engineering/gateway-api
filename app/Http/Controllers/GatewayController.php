@@ -49,7 +49,7 @@ class GatewayController extends Controller
     $log->path = "/" . $route;
     $log->method = $request->method();
 
-    $url = "{$service->url}/{$route}";
+    $url = "{$service->url}{$route}";
 
     $options = [
       "user-agent" => $request->header("user-agent"),
