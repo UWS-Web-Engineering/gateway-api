@@ -37,6 +37,7 @@ class ServiceController extends Controller
     $service->key = $request->input('key');
     $service->url = $request->input('url');
     $service->active = $request->input('active');
+    $service->private = $request->input('private');
 
     $service->save();
 
@@ -73,6 +74,7 @@ class ServiceController extends Controller
     $service->description = $request->input('description');
     $service->url = $request->input('url');
     $service->active = $request->input('active');
+    $service->private = $request->input('private');
     $service->save();
     return response()->json($service);
   }

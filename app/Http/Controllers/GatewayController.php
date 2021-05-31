@@ -38,6 +38,18 @@ class GatewayController extends Controller
       return response("Not Found", 404);
     }
 
+    if ($service->private) {
+      $authUrl = env('AUTH_URL');
+      $http = Http::withHeaders([
+        "Accept" => "application/json",
+        "Content-Type" => "application/json",
+        "Authorization" => $request->header("authorization", ""),
+      ])->send("GET", $authUrl . "/api/user/me", []);
+      if (!$http->status()) {
+        return response("Unauthorized", 401);
+      }
+    }
+
     $log->serviceId = $service->id;
 
     $route = join("/", $uriPaths);
